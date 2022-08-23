@@ -1,0 +1,44 @@
+* Docker build for vrn code
+
+If you've been redirected here from the 3D face reconstruction demo website: Sorry, I turned it off.
+
+This is intended to work on CPU. Will modify eventually to have CUDA
+support. It's available on DockerHub but you are welcome to build it
+yourself too. If you feel like doing this yourself, please feel free to
+send a pull request to a branch called cuda.
+
+** Setup
+
+*** Dockerhub
+
+The pre-built docker image is available on Docker Hub and includes the CPU float versions of the models. 
+
+#+BEGIN_SRC
+sudo docker pull asjackson/vrn:latest
+#+END_SRC
+
+*** Build docker manually
+
+The model files were originally held in GitHub's LFS, but I ran out of space. If you want to build the container
+yourself, feel free to ask me for links to these files, or alternatively grab them from inside the Docker Hub
+container.
+
+#+BEGIN_SRC
+git clone
+cd vrn-docker
+docker build -t vrn .
+#+END_SRC
+
+** Running the container
+
+An example image of Alan Turing is available in the folder ~data~,
+this needs to be bind mounted to ~/data~ in the container. With any
+luck, ~data/turing.jpg.obj~ will be created.
+
+#+BEGIN_SRC
+docker run -v $PWD/data:/data:Z asjackson/vrn /runner/run.sh /data/turing.jpg
+#+END_SRC
+
+The Z suffix changes the SELinux context of the directory so that it can be accessed on systems
+which have SELinux enabled. This might not be necessary on some distributions, such as Ubuntu,
+where SELinux is disabled by default. However, it is likely required under CentOS and Fedora.
